@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verification</title>
+  <style>
+    h3 {
+       color: var(--vscode-textPreformat-foreground);
+      font-family: var(--vscode-font-family);
+      font-weight: var(--vscode-font-weight);
+      font-size: 22px;
+    }
+
+    p {
+      color: var(--vscode-descriptionForeground);
+    }
+
+    button {
+      background-color: var(--vscode-button-background);
+      color: var(--vscode-button-foreground);
+      border: none;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+    }
+    .button:hover {
+  background-color: var(--vscode-button-hoverBackground); 
+  color: var(--vscode-button-hoverBackground); 
+}
+
+    a {
+      color: var(--vscode-textLink-activeForeground);
+      cursor: pointer;
+    }
+    .collapsible {
+  background-color: rgb(20, 20, 20);
+  color: var(--vscode-descriptionForeground);
+  cursor: pointer;
+  padding: 12px;  
+  margin: 5px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+}
+
+
+
+.content {
+  padding: 0 10px;
+  display: none;
+  overflow: hidden;
+  background-color: blue;
+}
+
+th{
+  color: white;
+  font-family: var(--vscode-font-family);
+  font-weight: var(--vscode-font-weight);
+}
+
+td{
+  color: var(--vscode-descriptionForeground);
+  font-family: var(--vscode-font-family);
+  font-weight: var(--vscode-font-weight);
+  text-align: center;
+}
+
+
+tr{
+  background-color: rgb(20, 20, 20);
+}
+
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  height:350px;
+}
+
+/* The Close Button */
+.close {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+  </style>
+</head>
+
+<body>
+    <div id="myModal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+          <span class="close" onclick="hideModal()">&times;</span>
+          <h3 id="hintHeader" style="color:black"> </h3>
+          <div style="float:left;">
+              <code id="unsolvedCode" style="color:red"></code>
+          </div>
+          <div style="float:right;">
+              <code id="solvedCode" style="color:green"></code>
+          </div>
+
+          <br>
+        </div>
+      
+      </div>
+  <br>
+  <br>
+  <a onclick="goBack()"> Previous window</a>
+  <br>
+  <h3> Logical Test Cases </h3>
+  <div id="div1" style=" height:350px; width:auto; overflow:scroll; overflow-y:scroll; overflow-x:hidden;">
+
+  </div>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <a onclick="closePanel()"> Close window </a>
+  
+  
+  <!-- <br>
+  <a onclick="checkPaths()"> Check Paths </a>
+  <br> -->
+  <!-- <br>
+    <p> For minimum logical mistakes, ensure there are no <br> structural mistakes at all.</p> -->
+  <script>
+    var modal = document.getElementById('myModal');
+    var objectToModal = null;
+    var span = document.getElementsByClassName("close")[0];
+
+    function showModal(){
+    modal.style.display = "block";
+    document.getElementById("hintHeader").innerHTML= "Last Solved " + (new Date().getMinutes() -new Date(objectToModal.firstVerifiedTimeStamp).getMinutes()) + " minutes ago";
+    document.getElementById("unsolvedCode").innerHTML= objectToModal.lastNotVerified;
+    document.getElementById("solvedCode").innerHTML= objectToModal.firstVerified;
+    }
+
+    function hideModal(){
+      modal.style.display ="none";
+    }
+
+  var i;
+
+    const vscode = acquireVsCodeApi();
+    (function fetchResponse() {
+      console.log("page loaded");
+      vscode.postMessage({
+        command: 'fetchResponseLogical',
+      });
+    })();
+
+    function closePanel() {
+      vscode.postMessage({
+        command: 'cancelOperation'
+      });
+    }
+
+    function goBack(){
+      console.log("Back button pressed");
+      vscode.postMessage({
+        command: 'goBack'
+      });
+    }
+
+    window.addEventListener('message', event => {
+
+const message = event.data; // The JSON data our extension sent
+switch (message.command) {
+  case 'initialize':
+  console.log("initializing page");
+  console.log(message.data);
+  var data = message.data;
+  var HTMLToForm = "<table id=\"table1\" style=\"width:100%\"; cellpadding=\"7px\";> <tr style=\"background-color: var(--vscode-editor-background)\"> <th>Test Target</th> <th>Result</th> <th>Input</th> <th>Actual</th> <th>Expected</th> </tr>";
+  //let buttonTitle = ""; 
+  for(i=0; i<data.length ;i++){
+    // buttonTitle = ""
+    // for (j=0; j<data.suggestion.length; j++){
+    //   if (data.logicalVer[i].testCaseName == data.suggestion[j].testCaseName){
+    //       buttonTitle = "Seek Help";
+    //       break;
+    //   }
+    // }
+    HTMLToForm += "<tr> <td>" + data[i].TestTarget + "</td> <td>" + data[i].Result + "</td> <td>" + data[i].Input + "</td> <td>" + data[i].Actual + "</td> <td>" + data[i].Expected + "</td>";
+    // if (buttonTitle=="Seek Help"){
+    //   objectToModal = data.suggestion[j];
+    //   HTMLToForm += "<button onClick=\"showModal()\"> Seek Help </button>" + "</td> </tr>";
+    // }
+    // else{
+    //   HTMLToForm += "No action available" + "</td> </tr>";
+    // }
+  }
+  HTMLToForm += "</table>"
+  document.getElementById('div1').innerHTML += HTMLToForm;
+  break;
+}
+});
+
+  </script>
+</body>
+
+</html>

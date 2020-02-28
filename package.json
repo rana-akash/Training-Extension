@@ -1,0 +1,67 @@
+{
+	"name": "pyverify",
+	"displayName": "PyVerify",
+	"description": "",
+	"version": "0.0.1",
+	"engines": {
+		"vscode": "^1.29.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
+		"onCommand:pyverify.Show"
+	],
+	"main": "./out/extension.js",
+	"contributes": {
+		"commands": [
+			{
+				"command": "pyverify.Show",
+				"title": "Verify Code",
+				"category": "Verify"
+			}
+		],
+		"keybindings": [
+			{
+				"command": "pyverify.Show",
+				"when": "resourceLangId == python",
+				"key": "ctrl+shift+t",
+				"mac": "cmd+f1"
+			}
+		],
+		"menus": {
+			"editor/title": [
+				{
+					"when": "resourceLangId == python",
+					"command": "pyverify.Show",
+					"group": "navigation"
+				}
+			],
+			"commandPalette": [
+				{
+					"command": "pyverify.Show",
+					"when": "resourceLangId == python"
+				}
+			]
+		}
+	},
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"watch": "tsc -watch -p ./",
+		"postinstall": "node ./node_modules/vscode/bin/install",
+		"test": "npm run compile && node ./node_modules/vscode/bin/test"
+	},
+	"devDependencies": {
+		"@types/mocha": "^2.2.42",
+		"@types/node": "^10.12.21",
+		"tslint": "^5.12.1",
+		"typescript": "^3.3.1",
+		"vscode": "^1.1.28",
+		"webpack": "^4.35.2",
+		"webpack-cli": "^3.3.5"
+	},
+	"dependencies": {
+		"oracledb": "^3.1.2"
+	}
+}

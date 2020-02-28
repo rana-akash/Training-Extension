@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verification</title>
+  <style>
+    h3 {
+      color: var(--vscode-textPreformat-foreground);
+      font-family: var(--vscode-font-family);
+      font-weight: var(--vscode-font-weight);
+      font-size: 22px;
+    }
+
+    p {
+      color: var(--vscode-descriptionForeground);
+    }
+
+    button {
+      color: var(--vscode-button-background);
+
+    }
+
+    a {
+      color: var(--vscode-textLink-activeForeground);
+      cursor: pointer;
+    }
+
+    th{
+  color: white;
+  font-family: var(--vscode-font-family);
+  font-weight: var(--vscode-font-weight);
+}
+
+td{
+  color: var(--vscode-descriptionForeground);
+  font-family: var(--vscode-font-family);
+  font-weight: var(--vscode-font-weight);
+  text-align: center;
+}
+
+
+tr{
+  background-color: rgb(20, 20, 20);
+}
+    
+  </style>
+</head>
+
+<body>
+
+  <br>
+  <br>
+  <a onclick="goBack()"> Previous window</a>
+  <br>
+  <h3> Structural Test Cases </h3>
+  <div id="div1" style=" height:300px; width:420px; overflow:scroll; overflow-y:scroll; overflow-x:hidden;">
+
+  </div>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <a onclick="closePanel()"> Close window </a>
+  
+  
+  <!-- <br>
+  <a onclick="checkPaths()"> Check Paths </a>
+  <br> -->
+  <!-- <br>
+    <p> For minimum logical mistakes, ensure there are no <br> structural mistakes at all.</p> -->
+  <script>
+      const vscode = acquireVsCodeApi();
+
+    (function fetchResponse() {
+      console.log("page loaded");
+      vscode.postMessage({
+        command: 'fetchResponseStructural',
+      });
+    })();
+
+    function closePanel() {
+      vscode.postMessage({
+        command: 'cancelOperation'
+      });
+    }
+
+    function goBack(){
+    console.log("Back button pressed");
+      vscode.postMessage({
+        command: 'goBack'
+      });
+    }
+
+    window.addEventListener('message', event => {
+
+const message = event.data; // The JSON data our extension sent
+switch (message.command) {
+  case 'initialize':
+  console.log("initializing page");
+  console.log(message.data);
+  var data = message.data
+
+  var HTMLToForm = "<table id=\"table1\" style=\"width:100%\"; cellpadding=\"7px\";> <tr style=\"background-color: var(--vscode-editor-background)\"> <tr> <th>Test Target</th> <th>Result</th> </tr>";
+  
+  var i;
+  var item;
+  for(i=0; i<data.length ;i++){
+    HTMLToForm += "<tr> <td>" + data[i].TestTarget + "</td> <td>" + data[i].Result + "</td> </tr>"
+  }
+  HTMLToForm += "</table>"
+  console.log(HTMLToForm);
+  document.getElementById("div1").innerHTML = HTMLToForm;
+  break;
+}
+
+});
+
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+  <html lang="en">
+  <head>
+	  <meta charset="UTF-8">
+	  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Results</title>
+    <style>
+    
+h1   {
+  color: var(--vscode-textPreformat-foreground);
+  font-family: var(--vscode-font-family);
+  font-weight: var(--vscode-font-weight);
+  font-size:20px;}
+
+  h3{
+    color: white;
+    font-family: var(--vscode-font-family);
+  font-weight: var(--vscode-font-weight);
+  font-size:20px;
+  }
+
+  p    {color: var(--vscode-descriptionForeground);}
+
+  button{
+    color: var(--vscode-button-foreground);
+    
+  }
+  a{
+    color: var(--vscode-textLink-activeForeground);
+    cursor: pointer;
+  }
+
+  .circlePercent {
+  position: relative;
+  top: 26px;
+  left: 26px;
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background:var(--vscode-editor-background);
+}
+.circlePercent:before,
+.circlePercent > .progressEnd {
+  position: absolute;
+  z-index: 3;
+  top: 2px;
+  left: 45px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--vscode-textPreformat-foreground);
+  -ms-transform-origin: 3px 46px;
+  transform-origin: 3px 46px;
+  content: "";
+}
+.circlePercent:after,
+.circlePercent > .progress {
+  position: absolute;
+  -ms-transform-origin: 48px 48px;
+  transform-origin: 48px 48px;
+  z-index: 0;
+  top: 0;
+  left: 0;
+  width: 48px;
+  height: 96px;
+  border-radius: 48px 0 0 48px;
+  background: var(--vscode-editor-background);
+  content: "";
+}
+.circlePercent.fiftyPlus:after {
+  background: var(--vscode-textPreformat-foreground);
+  -ms-transform: rotate(180deg);
+  transform: rotate(180deg);
+}
+.circlePercent > .progress.progress {
+  background: var(--vscode-textPreformat-foreground);
+}
+.circlePercent > .counter {
+  position: absolute;
+  box-sizing: border-box;
+  z-index: 2;
+  width: 100px;
+  height: 100px;
+  margin-top: -2px;
+  margin-left: -2px;
+  border-radius: 50%;
+  border: 4px solid var(--vscode-editor-background);
+}
+.circlePercent > .counter:before {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  margin-top: -13px;
+  width: 100%;
+  height: 26px;
+  font-size: 26px;
+  line-height: 26px;
+  font-family: sans-serif;
+  text-align: center;
+  color: var(--vscode-textPreformat-foreground);
+  content: attr(data-percent) "%";
+}
+.circlePercent > .counter:after {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  top: 6px;
+  left: 6px;
+  border-radius: 50%;
+  background: var(--vscode-editor-background);
+  content: "";
+}
+.circlePercent > .counter[data-percent="100"] {
+  background: var(--vscode-textPreformat-foreground);
+}
+.grid-container {
+  display: grid;
+  grid-column-gap: 5px;
+  grid-row-gap: 5px;
+  grid-template-columns: auto auto
+}
+.grid-item{
+  grid-row-start: 1;
+  grid-row-end: 1;
+}
+
+
+</style>
+  </head>
+  <body>
+	  <!-- <img src="https://media.giphy.com/media/lyLRTrqRpW8YU/giphy.gif" width="200" /> -->
+    <h1 style="font-size: 25px;" id="mainmsg"> ... </h1>
+    <br>
+    <br>
+    <div class="grid-container">
+          <div class="grid-item">
+              <h1> Structural correctness </h1>
+              <p> The structure of your code is likely to be incorrect <br> if you have modified the starter code provided to you. </p> 
+              <a onclick="showStructural()"> View test cases </a>
+          </div>
+      <div class="circlePercent" id="pb1">
+          <div class="counter" data-percent="0"></div>
+          <div class="progress"></div>
+          <div class="progressEnd"></div>
+      </div>
+    </div>
+   <br>
+   <br>
+    <div class="grid-container">
+      <div class="grid-item">
+          <h1> Logical correctness </h1>
+          <p> For minimum logical mistakes, ensure there are no <br> structural mistakes at all.</p>
+          <a onclick="showLogical()"> View test cases </a>
+      </div>
+        <div class="circlePercent" id="pb2">
+            <div class="counter" data-percent="0"></div>
+            <div class="progress"></div>
+            <div class="progressEnd"></div>
+        </div>
+      </div>
+    <br>
+   <br>
+    <div class="grid-container">
+      <div class="grid-item">
+          <h1> Quality of code </h1>
+          <p> Optimize your code complexity and follow the best <br> practices for writing maintainable code.</p>
+          <a onclick="showQuality()"> View analysis </a>
+      </div>
+        <div class="circlePercent" id="pb3">
+            <div class="counter" data-percent="0"></div>
+            <div class="progress"></div>
+            <div class="progressEnd"></div>
+        </div>
+      </div>
+    <!-- <br>
+    <br>
+    <h6 id="debug"> All result here first</h1> -->
+    <br>
+    <br>
+    <br>
+    <a onclick="closePanel()"> Close window </a>
+    <br>
+    
+    <script>
+
+const vscode = acquireVsCodeApi();
+
+(function fetchResponse() {
+      console.log("page loaded");
+      vscode.postMessage({
+        command: 'fetchResultsOverview',
+      });
+    })();
+
+    function showpi(a,b,c) {
+  var
+    elem1 = document.getElementById('pb1'),
+    elem2 = document.getElementById('pb2'),
+    elem3 = document.getElementById('pb3')
+    percent1 = 0;
+    percent2 = 0;
+    percent3 = 0;
+  (function animate1() {
+    setProgress(elem1, (percent1 += 1.25));
+    if(percent1 < a)
+      setTimeout(animate1, 15);
+  })();
+  (function animate2() {
+    setProgress(elem2, (percent2 += 1.25));
+    if(percent2 < b)
+      setTimeout(animate2, 15);
+  })();
+  (function animate3() {
+    setProgress(elem3, (percent3 += 1.25));
+    if(percent3 < c)
+      setTimeout(animate3, 15);
+  })();
+}
+
+        function closePanel() {
+            vscode.postMessage({
+              command: 'cancelOperation'
+            });
+        }
+
+        function showLogical(){
+            vscode.postMessage({
+              command: 'showLogical'
+            });
+        }
+
+        function showStructural(){
+            vscode.postMessage({
+              command: 'showStructural'
+            });
+        }
+
+        function showQuality(){
+            vscode.postMessage({
+              command: 'showQuality'
+            });
+        }
+
+        window.addEventListener('message', event => {
+
+        const message = event.data; // The JSON data our extension sent
+        switch (message.command) {
+        case 'initialize':
+          console.log("initializing page");
+          console.log(message.data);
+          var data = message.data;
+          // var data = JSON.stringify(message.data);
+          // document.getElementById('debug').innerText = data;
+          showpi(data.StructuralPercentage,data.LogicalPercentage,data.QualityPercentage);
+
+          if (data.TotalPercentage>0 && data.TotalPercentage<=66){
+            document.getElementById('mainmsg').innerText = "Keep trying!"
+          }
+          else if(data.TotalPercentage>66 && data.TotalPercentage<=99){
+            document.getElementById('mainmsg').innerText = "You're almost there!"
+          }
+          else if(data.TotalPercentage==100){
+            document.getElementById('mainmsg').innerText = "Well done! You cracked it."
+          }
+          break;
+        }
+      });
+
+      function setProgress(elem, percent) {
+  var
+    degrees = percent * 3.6,
+    transform = /MSIE 9/.test(navigator.userAgent) ? 'msTransform' : 'transform';
+  elem.querySelector('.counter').setAttribute('data-percent', Math.round(percent));
+  elem.querySelector('.progressEnd').style[transform] = 'rotate(' + degrees + 'deg)';
+  elem.querySelector('.progress').style[transform] = 'rotate(' + degrees + 'deg)';
+  if(percent >= 50 && !/(^|\s)fiftyPlus(\s|$)/.test(elem.className))
+    elem.className += ' fiftyPlus';
+}
+
+
+
+    </script>
+    
+    
+  </body>
+  </html>

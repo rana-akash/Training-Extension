@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verification</title>
+  <style>
+    h3 {
+      color: var(--vscode-textPreformat-foreground);
+      font-family: var(--vscode-font-family);
+      font-weight: var(--vscode-font-weight);
+      font-size: 25px;
+    }
+
+    p {
+      color: var(--vscode-descriptionForeground);
+    }
+
+    button {
+      color: var(--vscode-button-background);
+
+    }
+
+    a {
+      color: var(--vscode-textLink-activeForeground);
+      cursor: pointer;
+    }
+
+    .loader {
+  border: 5px solid var(--vscode-editor-background); 
+  border-top: 5px solid var(--vscode-progressBar-background); 
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  animation: spin 1s linear infinite;
+}
+
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+  </style>
+</head>
+
+<body>
+  <!-- <img src="" id="myImg" width="200" /> -->
+  <br>
+  <div class="loader"></div>
+  <br>
+  <h3> Testing your code.. </h3>
+  <a onclick="closePanel()"> Cancel operation </a>
+  <br>
+  <!-- <br>
+  <a onclick="checkPaths()"> Check Paths </a>
+  <br> -->
+  <!-- <br>
+    <p> For minimum logical mistakes, ensure there are no <br> structural mistakes at all.</p> -->
+  <script>
+    var gifSrc = null;
+
+    function closePanel() {
+      const vscode = acquireVsCodeApi();
+      vscode.postMessage({
+        command: 'cancelOperation'
+      });
+    }
+
+    function checkPaths() {
+      const vscode = acquireVsCodeApi();
+      vscode.postMessage({
+        command: 'checkPaths'
+      });
+    }
+
+    window.addEventListener('message', event => {
+
+      const message = event.data; // The JSON data our extension sent
+      switch (message.command) {
+        case 'initialize':
+          console.log(message.gifpath.toString())
+          document.getElementById("myImg").src = message.gifpath;
+          break;
+      }
+    });
+
+  </script>
+</body>
+
+</html>
